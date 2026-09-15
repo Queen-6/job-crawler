@@ -121,10 +121,15 @@ def main_collector():
         if job["url"] not in unique_jobs:
             unique_jobs[job["url"]] = job
             
-    final_jobs = list(unique_jobs.values())
-    for job in final_jobs:
-        job["priority"] = evaluate_priority(job["title"], job["company"])
-        
+    # ------ 여기서부터 아래 부분을 통째로 덮어쓰세요 ------
+    final_jobs = []
+    for job in unique_jobs.values():
+        priority = evaluate_priority(job["title"], job["company"])
+        # '기타'로 분류된(검색어와 무관한 광고) 공고는 저장하지 않고 버림!
+        if priority != "기타":
+            job["priority"] = priority
+            final_jobs.append(job)
+            
     return final_jobs
 
 if __name__ == "__main__":
